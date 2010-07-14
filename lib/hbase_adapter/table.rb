@@ -1,3 +1,5 @@
+require 'hbase_adapter/column_family'
+
 module HbaseAdapter
   class Table
     attr_reader :connection, :table_name
@@ -5,6 +7,10 @@ module HbaseAdapter
     def initialize(connection, table_name)
       @connection = connection
       @table_name = table_name
+    end
+    
+    def name
+      table_name
     end
     
     def enable!
