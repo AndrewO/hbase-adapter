@@ -7,4 +7,4 @@ module Hbaser
 end
 
 require 'hbaser/connection'
-# require 'hbaser/table'
+require 'hbaser/table'

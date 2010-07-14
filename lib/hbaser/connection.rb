@@ -1,3 +1,5 @@
+require 'hbaser/table'
+
 module Hbaser
   class Connection
     attr_reader :host, :port
@@ -24,10 +26,15 @@ module Hbaser
       c = Apache::Hadoop::Hbase::Thrift::Hbase::Client.new(p)
       t.open
       
-      c
+      @client = c
     end
 
+    def table_names
+      client.getTableNames
+    end
+    
     def tables
+      table_names.map {|table_name| Hbaser::Table.new(client, table_name)}
     end
   end
 end
