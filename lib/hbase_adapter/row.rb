@@ -21,22 +21,19 @@ module HbaseAdapter
       else
         if max_time.nil?
           # One column, versions specified.  getVer
-          tcells = connection.client.getVer(table.name, key, column, numVersions)
+          tcells = connection.client.getVer(table.name, key, column, num_versions)
         else
           # One column, versions specified, max time specified.  getVerTs
-          tcells = connection.client.getVerTs(table.name, key, column, numVersions, max_time)
+          tcells = connection.client.getVerTs(table.name, key, column, (max_time.to_f * 100000).to_i, num_versions)
         end
         
         tcells.map {|tcell| HbaseAdapter::Cell.new(connection, self, column, tcell)}
       end
     end
     
-    def cells(columns = [], options = {})
-      if columns.is_a?(Hash) && options.empty?
-        options = columns
-        columns = []
-      end
-      
+    def cells(*columns)
+      options = columns.pop if columns.last.is_a?(Hash)
+      options ||= {}
       max_time = options[:max_time]
       
       if columns.empty?
@@ -45,7 +42,7 @@ module HbaseAdapter
           trow_results = connection.client.getRow(table.name, key)
         else
           # getRowTs
-          trow_results = connection.client.getRowTs(table.name, key, max_time)
+          trow_results = connection.client.getRowTs(table.name, key, (max_time.to_f * 100000).to_i)
         end
       else
         if max_time.nil?
@@ -53,7 +50,7 @@ module HbaseAdapter
           trow_results = connection.client.getRowWithColumns(table.name, key, columns)
         else
           # getRowWithColumnsTs
-          trow_results = connection.client.getRowWithColumnsTs(table.name, key, columns, max_time)
+          trow_results = connection.client.getRowWithColumnsTs(table.name, key, columns, (max_time.to_f * 100000).to_i)
         end
       end
 
