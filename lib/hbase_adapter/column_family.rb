@@ -1,5 +1,5 @@
 module HbaseAdapter
-  class Column
+  class ColumnFamily
     attr_reader :column_descriptor
     def initialize(column_descriptor)
       @column_descriptor = case column_descriptor

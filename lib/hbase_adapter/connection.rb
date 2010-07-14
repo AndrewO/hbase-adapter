@@ -1,4 +1,4 @@
-require 'hbaser/table'
+require 'hbase_adapter/table'
 
 module HbaseAdapter
   class Connection
