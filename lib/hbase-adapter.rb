@@ -4,6 +4,9 @@ require 'rubygems'
 require 'hbase-thrift'
 
 module HbaseAdapter
+  IOError = Apache::Hadoop::Hbase::Thrift::IOError
+  IllegalArgument = Apache::Hadoop::Hbase::Thrift::IllegalArgument
+  TableAlreadyExists = Apache::Hadoop::Hbase::Thrift::AlreadyExists
 end
 
 require 'hbase_adapter/connection'

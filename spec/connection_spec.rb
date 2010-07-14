@@ -30,15 +30,22 @@ describe "HbaseAdapter::Connection" do
   end
   
   it "can create and delete tables" do
-    @connection.create_table!("test_table", 
-      HbaseAdapter::ColumnFamily.new(:name => "foo"),
-      HbaseAdapter::ColumnFamily.new(:name => "bar", :max_versions => 50)
-    )
+    begin
+      @connection.create_table!("test_table", 
+        HbaseAdapter::ColumnFamily.new(:name => "foo"),
+        HbaseAdapter::ColumnFamily.new(:name => "bar", :max_versions => 50)
+      )
     
-    @connection.tables[:test_table].should_not be_nil
+      @connection.tables[:test_table].should_not be_nil
     
-    @connection.delete_table!(:test_table)
+      @connection.delete_table!(:test_table)
     
-    @connection.tables[:test_table].should be_nil
+      @connection.tables[:test_table].should be_nil
+    rescue HbaseAdapter::TableAlreadyExists
+      @connection.delete_table!(:test_table)
+      retry
+    ensure
+      @connection.delete_table!(:test_table) if @connection.tables[:test_table]
+    end
   end
 end
