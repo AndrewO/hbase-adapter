@@ -1,12 +1,23 @@
 module HbaseAdapter
   class ColumnFamily
+    KEY_MAP = {
+      :name => :name,
+      :max_versions => :maxVersions
+    }
+    
+    class << self
+      def translate_hash(hash)
+        Hash[*(hash.map {|(k,v)| [KEY_MAP[k.to_sym], v]}.flatten)]
+      end
+    end
+    
     attr_reader :column_descriptor
-    def initialize(column_descriptor)
-      @column_descriptor = case column_descriptor
+    def initialize(args = {})
+      @column_descriptor = case args
       when Apache::Hadoop::Hbase::Thrift::ColumnDescriptor
-        column_descriptor
+        args
       when Hash
-        Apache::Hadoop::Hbase::Thrift::ColumnDescriptor.new(column_descriptor)
+        Apache::Hadoop::Hbase::Thrift::ColumnDescriptor.new(self.class.translate_hash(args))
       end
     end
     

@@ -34,7 +34,19 @@ module HbaseAdapter
     end
     
     def tables
-      table_names.map {|table_name| HbaseAdapter::Table.new(client, table_name)}
+      table_names.inject({}) do|hash, table_name|
+        hash[table_name.to_sym] = HbaseAdapter::Table.new(client, table_name)
+        hash
+      end
+    end
+    
+    def create_table!(table_name, *column_families)
+      client.createTable(table_name.to_s, column_families.map {|cd| cd.column_descriptor})
+    end
+    
+    def delete_table!(table_name)
+      client.disableTable(table_name.to_s)
+      client.deleteTable(table_name.to_s)
     end
   end
 end

@@ -29,6 +29,4 @@ describe "HbaseAdapter::Table" do
   it "gets a table's regions" do
     @table.regions.should_not be_nil
   end
-  
-  it "can delete a table"
 end

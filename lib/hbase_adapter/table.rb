@@ -28,15 +28,14 @@ module HbaseAdapter
     end
 
     def columns
-      connection.client.getColumnDescriptors(table_name)
+      connection.client.getColumnDescriptors(table_name).inject({}) do|hash, (col_name, col)|
+        hash[col_name.to_sym] = HbaseAdapter::ColumnFamily.new(col)
+        hash
+      end
     end
     
     def regions
       connection.client.getTableRegions(table_name)
-    end
-
-    def delete!
-      connection.client.deleteTable(table_name)
     end
   end
 end

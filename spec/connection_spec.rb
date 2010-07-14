@@ -26,6 +26,19 @@ describe "HbaseAdapter::Connection" do
   
   it "gets table objects" do
     @connection.tables.should_not be_empty
-    @connection.tables.each {|t| t.should be_a_kind_of(HbaseAdapter::Table)}
+    @connection.tables.values.each {|t| t.should be_a_kind_of(HbaseAdapter::Table)}
+  end
+  
+  it "can create and delete tables" do
+    @connection.create_table!("test_table", 
+      HbaseAdapter::ColumnFamily.new(:name => "foo"),
+      HbaseAdapter::ColumnFamily.new(:name => "bar", :max_versions => 50)
+    )
+    
+    @connection.tables[:test_table].should_not be_nil
+    
+    @connection.delete_table!(:test_table)
+    
+    @connection.tables[:test_table].should be_nil
   end
 end
