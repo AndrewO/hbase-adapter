@@ -54,9 +54,11 @@ module HbaseAdapter
         end
       end
 
-      trow_results.first.columns.inject({}) do |hash, (col_name, tcell)|
-        hash[col_name.to_sym] = HbaseAdapter::Cell.new(connection, self, col_name, tcell)
-        hash
+      unless trow_results.empty?
+        trow_results.first.columns.inject({}) do |hash, (col_name, tcell)|
+          hash[col_name.to_sym] = HbaseAdapter::Cell.new(connection, self, col_name, tcell)
+          hash
+        end
       end
     end
   end

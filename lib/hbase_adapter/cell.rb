@@ -14,8 +14,11 @@ module HbaseAdapter
       cell.value
     end
     
-    def versions(num, max_timestamp = nil)
-      row[col_name, num, max_timestamp].map {|tcell| HbaseAdapter::Cell.new(connection, row, col_name, tcell)}
-    end
+    # Causes HBase to freak out with an ArrayIndexOutOfBoundsException.  Have no idea if it's my fault, but ignoring for now
+    # def incr!(incr_val = 1)
+    #   connection.client.atomicIncrement(row.table.name.to_s, row.key.to_s, col_name.to_s, incr_val)
+    # end
+    
+    # TODO: easy version access
   end
 end

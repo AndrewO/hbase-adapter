@@ -43,13 +43,27 @@ module HbaseAdapter
     def regions
       connection.client.getTableRegions(table_name)
     end
-        
-    def mutate!(options = {}, &blk)
-      max_time = options[:timestamp]
+    
+    def [](row_key)
+      HbaseAdapter::Row.new(connection, self, row_key)
+    end
+    
+    def delete_row!(key, options = {})
+      timestamp = options[:timestamp]
       
-      bm = HbaseAdapter::BatchMutation.new(&blk)
+      if timestamp.nil?
+        connection.client.deleteAllRow(table_name, key.to_s)
+      else
+        connection.client.deleteAllRowTs(table_name, key.to_s, timestamp.to_i64)
+      end
+    end
+    
+    def mutate!(key, options = {}, &blk)
+      timestamp = options[:timestamp]
       
-      if max_time.nil?
+      bm = HbaseAdapter::BatchMutation.new(key, &blk)
+      
+      if timestamp.nil?
         connection.client.mutateRows(table_name, bm.to_thrift)
       else
         connection.client.mutateRowsTs(table_name, bm.to_thrift, timestamp.to_i64)

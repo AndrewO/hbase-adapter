@@ -39,6 +39,8 @@ describe "HbaseAdapter::Row" do
     rescue HbaseAdapter::TableAlreadyExists
       @connection.client.disableTable("test_table_users")
       @connection.client.deleteTable("test_table_users")
+      
+      retry
     end
   end
   
