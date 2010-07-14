@@ -57,7 +57,7 @@ describe "HbaseAdapter::Row" do
   end
   
   it "accesses its cells with a timestamp" do
-    cells = @row.cells(:max_time => @time_between)
+    cells = @row.cells(:timestamp => @time_between)
     cells.should_not be_empty
   end
   
@@ -67,7 +67,7 @@ describe "HbaseAdapter::Row" do
   end
 
   it "accesses particular columns from its cells with a timestamp" do
-    cells = @row.cells("info:login", "other_stuff:favorite_color", :max_time => @time_between)
+    cells = @row.cells("info:login", "other_stuff:favorite_color", :timestamp => @time_between)
     cells.should_not be_empty
   end
   
@@ -82,7 +82,7 @@ describe "HbaseAdapter::Row" do
   end
   
   it "accesses a certain number of versions single columns from its cells with a timestamp" do
-    cells = @row["info:login", {:num_versions => 3, :max_time => @time_between}]
+    cells = @row["info:login", {:num_versions => 3, :timestamp => @time_between}]
     cells.should_not be_empty
   end
 

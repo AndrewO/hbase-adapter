@@ -9,6 +9,8 @@ module HbaseAdapter
   TableAlreadyExists = Apache::Hadoop::Hbase::Thrift::AlreadyExists
 end
 
+require 'core_ext/time_ext'
+
 require 'hbase_adapter/connection'
 require 'hbase_adapter/table'
 require 'hbase_adapter/column_family'

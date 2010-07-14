@@ -43,5 +43,17 @@ module HbaseAdapter
     def regions
       connection.client.getTableRegions(table_name)
     end
+        
+    def mutate!(options = {}, &blk)
+      max_time = options[:timestamp]
+      
+      bm = HbaseAdapter::BatchMutation.new(&blk)
+      
+      if max_time.nil?
+        connection.client.mutateRows(table_name, bm.to_thrift)
+      else
+        connection.client.mutateRowsTs(table_name, bm.to_thrift, timestamp.to_i64)
+      end
+    end
   end
 end

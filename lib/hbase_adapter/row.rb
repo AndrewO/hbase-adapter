@@ -12,19 +12,19 @@ module HbaseAdapter
 
     def [](column, options = {})
       num_versions = options[:num_versions]
-      max_time = options[:max_time]
+      timestamp = options[:timestamp]
 
-      if num_versions.nil? && max_time.nil?
+      if num_versions.nil? && timestamp.nil?
         # One column, no options.  Simple get.  Return a single cell
         tcell = connection.client.get(table.name, key, column).first
         HbaseAdapter::Cell.new(connection, self, column, tcell)
       else
-        if max_time.nil?
+        if timestamp.nil?
           # One column, versions specified.  getVer
           tcells = connection.client.getVer(table.name, key, column, num_versions)
         else
           # One column, versions specified, max time specified.  getVerTs
-          tcells = connection.client.getVerTs(table.name, key, column, (max_time.to_f * 100000).to_i, num_versions)
+          tcells = connection.client.getVerTs(table.name, key, column, timestamp.to_i64, num_versions)
         end
         
         tcells.map {|tcell| HbaseAdapter::Cell.new(connection, self, column, tcell)}
@@ -34,23 +34,23 @@ module HbaseAdapter
     def cells(*columns)
       options = columns.pop if columns.last.is_a?(Hash)
       options ||= {}
-      max_time = options[:max_time]
+      timestamp = options[:timestamp]
       
       if columns.empty?
-        if max_time.nil?
+        if timestamp.nil?
           # getRow
           trow_results = connection.client.getRow(table.name, key)
         else
           # getRowTs
-          trow_results = connection.client.getRowTs(table.name, key, (max_time.to_f * 100000).to_i)
+          trow_results = connection.client.getRowTs(table.name, key, timestamp.to_i64)
         end
       else
-        if max_time.nil?
+        if timestamp.nil?
           # getRowWithColumns
           trow_results = connection.client.getRowWithColumns(table.name, key, columns)
         else
           # getRowWithColumnsTs
-          trow_results = connection.client.getRowWithColumnsTs(table.name, key, columns, (max_time.to_f * 100000).to_i)
+          trow_results = connection.client.getRowWithColumnsTs(table.name, key, columns, timestamp.to_i64)
         end
       end
 
