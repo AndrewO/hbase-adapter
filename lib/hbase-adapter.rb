@@ -3,8 +3,8 @@ $:.unshift File.expand_path(File.dirname(__FILE__))
 require 'rubygems'
 require 'hbase-thrift'
 
-module Hbaser
+module HbaseAdapter
 end
 
-require 'hbaser/connection'
-require 'hbaser/table'
+require 'hbase_adapter/connection'
+require 'hbase_adapter/table'

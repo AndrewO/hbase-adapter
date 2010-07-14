@@ -1,6 +1,6 @@
 require 'hbaser/table'
 
-module Hbaser
+module HbaseAdapter
   class Connection
     attr_reader :host, :port
 
@@ -34,7 +34,7 @@ module Hbaser
     end
     
     def tables
-      table_names.map {|table_name| Hbaser::Table.new(client, table_name)}
+      table_names.map {|table_name| HbaseAdapter::Table.new(client, table_name)}
     end
   end
 end

@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'spec'
 
-require File.dirname(__FILE__) + '/../lib/hbaser'
+require File.dirname(__FILE__) + '/../lib/hbase-adapter'
 
 HBASE_CONNECTION_PARAMS = ['127.0.0.1', 9090]
 

@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
-describe "Hbaser::Connection" do
+describe "HbaseAdapter::Connection" do
   before do
-    @connection = Hbaser::Connection.new(:host => HBASE_CONNECTION_PARAMS[0], :port => HBASE_CONNECTION_PARAMS[1])
+    @connection = HbaseAdapter::Connection.new(:host => HBASE_CONNECTION_PARAMS[0], :port => HBASE_CONNECTION_PARAMS[1])
   end
   
   it "doesn't connect by default" do
@@ -26,6 +26,6 @@ describe "Hbaser::Connection" do
   
   it "gets table objects" do
     @connection.tables.should_not be_empty
-    @connection.tables.each {|t| t.should be_a_kind_of(Hbaser::Table)}
+    @connection.tables.each {|t| t.should be_a_kind_of(HbaseAdapter::Table)}
   end
 end

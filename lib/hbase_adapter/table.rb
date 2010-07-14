@@ -1,4 +1,4 @@
-module Hbaser
+module HbaseAdapter
   class Table
     attr_reader :connection, :table_name
     

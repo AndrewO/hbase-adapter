@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
-describe "Hbaser::Table" do
+describe "HbaseAdapter::Table" do
   before do
-    @connection = Hbaser::Connection.new(:host => HBASE_CONNECTION_PARAMS[0], :port => HBASE_CONNECTION_PARAMS[1])
-    @table = Hbaser::Table.new(@connection, "users")
+    @connection = HbaseAdapter::Connection.new(:host => HBASE_CONNECTION_PARAMS[0], :port => HBASE_CONNECTION_PARAMS[1])
+    @table = HbaseAdapter::Table.new(@connection, "users")
   end
   
   it "can enable or disable a table and get its status" do
