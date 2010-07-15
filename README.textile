@@ -1,0 +1,52 @@
+h1. HBase Adapter
+
+Wrapping up all of that HBase Thrift stuff so you can use it.
+
+h2. Dependencies
+
+Install HBase and Thrift normally (for some definition of "normally" for your platform).  This code was developed against HBase 0.20.5
+
+gem install hbase-thrift
+
+h2. Alpha
+
+This is very alpha and may not be production ready.  Contributions are welcome though.
+
+h2. TODO
+
+h3. Thrift
+
+All Thrift structures and services (even redundant ones) are represented as more idiomatic Ruby classes and methods except the following:
+
+Thrift data structures:
+
+* Some of the attributes on ColumnDescriptor
+* TRegionInfo: probably just going to wrap in something with Ruby style attribute names.
+
+Thrift service methods:
+
+* atomicIncrement (spec'd & implemented, but there's a Java error)
+* scannerOpen
+* scannerOpenWithStop 
+* scannerOpenWithPrefix
+* scannerOpenTs 
+* scannerOpenWithStopTs
+* scannerGet
+* scannerGetList
+* scannerClose
+
+h3. Documentation
+
+Some documentation would be good...
+
+h3. Other
+
+A lot of the code could be DRYer.  Also, I'd like to make it so we don't have to keep dropping and creating tables in tests.
+
+h2. Contributing
+
+Fork the repository at http://github.com/AndrewO/hbase-adapter and send me a pull request.
+
+Happy hacking.
+
+–Andrew O'Brien
