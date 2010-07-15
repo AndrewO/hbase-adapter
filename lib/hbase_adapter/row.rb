@@ -63,15 +63,15 @@ module HbaseAdapter
       end
     end
     
-    def mutate!(key, options = {}, &blk)
+    def mutate!(options = {}, &blk)
       timestamp = options[:timestamp]
       
       ml = HbaseAdapter::MutationList.new(&blk)
       
       if timestamp.nil?
-        connection.client.mutateRows(table_name, ml.to_thrift)
+        connection.client.mutateRow(table.name, key, ml.to_thrift)
       else
-        connection.client.mutateRowsTs(table_name, ml.to_thrift, timestamp.to_i64)
+        connection.client.mutateRowTs(table.name, key, ml.to_thrift, timestamp.to_i64)
       end
     end
   end
