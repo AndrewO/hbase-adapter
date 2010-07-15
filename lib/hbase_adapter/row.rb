@@ -63,6 +63,16 @@ module HbaseAdapter
       end
     end
     
+    def delete!(col, options = {})
+      timestamp = options[:timestamp]
+      
+      if timestamp.nil?
+        connection.client.deleteAll(table.name, key.to_s, col.to_s)
+      else
+        connection.client.deleteAllTs(table.name, key.to_s, col.to_s, timestamp.to_i64)
+      end
+    end
+    
     def mutate!(options = {}, &blk)
       timestamp = options[:timestamp]
       

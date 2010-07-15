@@ -88,7 +88,17 @@ describe "HbaseAdapter::Row" do
     cells.should_not be_empty
   end
 
-  it "bulk mutates a row" do
+  it "deletes a row" do
+    @row.delete!("info:login")
+    @row["info:login"].should be_nil
+  end
+  
+  it "deletes a row by timestamp" do
+    @row.delete!("info:login", :timestamp => Time.now - 24 * 60 * 60)
+    @row["info:login"].should_not be_nil
+  end
+
+  it "mutates a row" do
     @row.mutate! do
       delete "other_stuff:favorite_color"
       update "info:login", "andrewo"
@@ -98,7 +108,7 @@ describe "HbaseAdapter::Row" do
     @table["andrew"]["other_stuff:favorite_color"].should be_nil
   end
   
-  it "bulk mutates a row by timestamp" do
+  it "mutates a row by timestamp" do
     @row.mutate!(:timestamp => Time.now - 24 * 60 * 60) do
       delete "other_stuff:favorite_color"
       update "info:login", "andrewo"

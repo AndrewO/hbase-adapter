@@ -89,7 +89,7 @@ describe "HbaseAdapter::Table" do
     @table["andrew"].cells.should_not be_nil
   end
   
-  it "bulk mutates a row" do
+  it "bulk mutates multiple rows" do
     @table.mutate! do
       batch_mutation("andrew") do
         delete "other_stuff:favorite_color"
@@ -106,7 +106,7 @@ describe "HbaseAdapter::Table" do
     @table["chris"]["other_stuff:favorite_color"].value.should == "clear"
   end
   
-  it "bulk mutates a row by timestamp" do
+  it "bulk mutates multiple rows by timestamp" do
     @table.mutate!(:timestamp => Time.now - 24 * 60 * 60) do
       batch_mutation("andrew") do
         delete "other_stuff:favorite_color"
