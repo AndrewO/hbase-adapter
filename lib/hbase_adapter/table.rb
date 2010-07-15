@@ -59,16 +59,15 @@ module HbaseAdapter
       end
     end
     
-    def mutate!(key, options = {}, &blk)
+    def mutate!(options = {}, &blk)
       timestamp = options[:timestamp]
       
-      bm = HbaseAdapter::BatchMutation.new(key, &blk)
+      ml = HbaseAdapter::MutationList.new(&blk)
       
       if timestamp.nil?
-        # TODO: allow multiple batch mutations
-        connection.client.mutateRows(table_name, [bm.to_thrift])
+        connection.client.mutateRows(table_name, ml.to_thrift)
       else
-        connection.client.mutateRowsTs(table_name, [bm.to_thrift], timestamp.to_i64)
+        connection.client.mutateRowsTs(table_name, ml.to_thrift, timestamp.to_i64)
       end
     end
   end

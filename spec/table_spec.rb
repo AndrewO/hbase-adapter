@@ -90,22 +90,36 @@ describe "HbaseAdapter::Table" do
   end
   
   it "bulk mutates a row" do
-    @table.mutate!("andrew") do
-      delete "other_stuff:favorite_color"
-      update "info:login", "andrewo"
+    @table.mutate! do
+      batch_mutation("andrew") do
+        delete "other_stuff:favorite_color"
+        update "info:login", "andrewo"
+      end
+      
+      batch_mutation("chris") do
+        update "other_stuff:favorite_color", "clear"
+      end
     end
     
     @table["andrew"]["info:login"].value.should == "andrewo"
     @table["andrew"]["other_stuff:favorite_color"].should be_nil
+    @table["chris"]["other_stuff:favorite_color"].value.should == "clear"
   end
   
   it "bulk mutates a row by timestamp" do
-    @table.mutate!("andrew", :timestamp => Time.now - 24 * 60 * 60) do
-      delete "other_stuff:favorite_color"
-      update "info:login", "AndrewO"
+    @table.mutate!(:timestamp => Time.now - 24 * 60 * 60) do
+      batch_mutation("andrew") do
+        delete "other_stuff:favorite_color"
+        update "info:login", "AndrewO"
+      end
+      
+      batch_mutation("chris") do
+        update "other_stuff:favorite_color", "clear"
+      end
     end
     
     @table["andrew"]["info:login"].value.should == "AndrewO"
     @table["andrew"]["other_stuff:favorite_color"].should_not be_nil
+    @table["chris"]["other_stuff:favorite_color"].value.should == "clear"
   end
 end

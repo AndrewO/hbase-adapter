@@ -1,4 +1,5 @@
 require 'hbase_adapter/cell'
+require 'hbase_adapter/mutation'
 
 module HbaseAdapter
   class Row
@@ -59,6 +60,18 @@ module HbaseAdapter
           hash[col_name.to_sym] = HbaseAdapter::Cell.new(connection, self, col_name, tcell) if tcell
           hash
         end
+      end
+    end
+    
+    def mutate!(key, options = {}, &blk)
+      timestamp = options[:timestamp]
+      
+      ml = HbaseAdapter::MutationList.new(&blk)
+      
+      if timestamp.nil?
+        connection.client.mutateRows(table_name, ml.to_thrift)
+      else
+        connection.client.mutateRowsTs(table_name, ml.to_thrift, timestamp.to_i64)
       end
     end
   end

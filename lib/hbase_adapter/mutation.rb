@@ -33,6 +33,30 @@ module HbaseAdapter
     end
   end
   
+  class MutationList
+    def initialize(&blk)
+      @mutations = []
+      
+      self.instance_eval(&blk)
+    end
+    
+    def batch_mutation(key, &blk)
+      @mutations << BatchMutation.new(key, &blk)
+    end
+    
+    def update(column, value)
+      @mutations << UpdateMutation.new(column, value)
+    end
+    
+    def delete(column)
+      @mutations << DeleteMutation.new(column)
+    end
+    
+    def to_thrift
+      @mutations.map {|m| m.to_thrift}
+    end
+  end
+  
   class BatchMutation
     attr_reader :key, :mutations
     
