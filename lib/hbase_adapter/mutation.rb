@@ -22,7 +22,7 @@ module HbaseAdapter
   
   class UpdateMutation < Mutation
     def initialize(column, value)
-      super
+      super(column)
       @value = value
     end
   end
@@ -47,7 +47,7 @@ module HbaseAdapter
       @mutations << UpdateMutation.new(column, value)
     end
     
-    def delete(key, column)
+    def delete(column)
       @mutations << DeleteMutation.new(column)
     end
     

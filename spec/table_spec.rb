@@ -88,4 +88,16 @@ describe "HbaseAdapter::Table" do
     @table.delete_row!("andrew", :timestamp => @time_between)
     @table["andrew"].cells.should_not be_nil
   end
+  
+  it "bulk mutates a row" do
+    @table.mutate!("andrew") do
+      delete "other_stuff:favorite_color"
+      update "info:login", "andrewo"
+    end
+    
+    @table["andrew"]["info:login"].value.should == "andrewo"
+    @table["andrew"]["other_stuff:favorite_color"].should be_nil
+  end
+  
+  it "bulk mutates a row by timestamp"
 end

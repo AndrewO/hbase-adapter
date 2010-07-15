@@ -17,7 +17,7 @@ module HbaseAdapter
       if num_versions.nil? && timestamp.nil?
         # One column, no options.  Simple get.  Return a single cell
         tcell = connection.client.get(table.name, key, column).first
-        HbaseAdapter::Cell.new(connection, self, column, tcell)
+        HbaseAdapter::Cell.new(connection, self, column, tcell) if tcell
       else
         if timestamp.nil?
           # One column, versions specified.  getVer
@@ -27,7 +27,7 @@ module HbaseAdapter
           tcells = connection.client.getVerTs(table.name, key, column, timestamp.to_i64, num_versions)
         end
         
-        tcells.map {|tcell| HbaseAdapter::Cell.new(connection, self, column, tcell)}
+        tcells.compact.map {|tcell| HbaseAdapter::Cell.new(connection, self, column, tcell)}
       end
     end
     
@@ -56,7 +56,7 @@ module HbaseAdapter
 
       unless trow_results.empty?
         trow_results.first.columns.inject({}) do |hash, (col_name, tcell)|
-          hash[col_name.to_sym] = HbaseAdapter::Cell.new(connection, self, col_name, tcell)
+          hash[col_name.to_sym] = HbaseAdapter::Cell.new(connection, self, col_name, tcell) if tcell
           hash
         end
       end

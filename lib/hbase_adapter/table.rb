@@ -1,4 +1,5 @@
 require 'hbase_adapter/column_family'
+require 'hbase_adapter/mutation'
 
 module HbaseAdapter
   class Table
@@ -64,9 +65,10 @@ module HbaseAdapter
       bm = HbaseAdapter::BatchMutation.new(key, &blk)
       
       if timestamp.nil?
-        connection.client.mutateRows(table_name, bm.to_thrift)
+        # TODO: allow multiple batch mutations
+        connection.client.mutateRows(table_name, [bm.to_thrift])
       else
-        connection.client.mutateRowsTs(table_name, bm.to_thrift, timestamp.to_i64)
+        connection.client.mutateRowsTs(table_name, [bm.to_thrift], timestamp.to_i64)
       end
     end
   end
